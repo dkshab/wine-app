@@ -9,3 +9,4 @@ psycopg2-binary==2.7.4
 gunicorn==19.8.1
 coverage==4.5.1
 flake8===3.5.0
+pyjwt==1.6.4
