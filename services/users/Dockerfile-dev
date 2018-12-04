@@ -1,11 +1,10 @@
 # base image
-FROM python:3.6.5-alpine
+FROM python:3.6.5-slim
 
-# install dependencies
-RUN apk update && \
-    apk add --virtual build-deps gcc python-dev musl-dev && \
-    apk add postgresql-dev && \
-    apk add netcat-openbsd
+# install netcat
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    apt-get clean
 
 # set working directory
 WORKDIR /usr/src/app
@@ -22,4 +21,4 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 COPY . /usr/src/app
 
 # run server
-CMD python manage.py run -h 0.0.0.0
+CMD ["/usr/src/app/entrypoint.sh"]
