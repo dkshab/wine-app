@@ -77,8 +77,7 @@ class TestUserService(BaseTestCase):
                 '/users',
                 data=json.dumps(dict(
                     username='michael',
-                    email='michael@reallynotreal.com',
-                    password='greaterthaneight')),
+                    email='michael@reallynotreal.com')),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())

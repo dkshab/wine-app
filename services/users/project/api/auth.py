@@ -1,5 +1,4 @@
 # services/users/project/api/auth.py
-import time
 
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc, or_
@@ -71,6 +70,7 @@ def login_user():
                 response_object['status'] = 'success'
                 response_object['message'] = 'Successfully logged in.'
                 response_object['auth_token'] = auth_token.decode()
+                return jsonify(response_object), 200
         else:
             response_object['message'] = 'User does not exist.'
             return jsonify(response_object), 404
@@ -80,7 +80,7 @@ def login_user():
 
 @auth_blueprint.route('/auth/logout', methods=['GET'])
 def logout_user():
-    # get auth toke
+    # get auth token
     auth_header = request.headers.get('Authorization')
     response_object = {
         'status': 'fail',

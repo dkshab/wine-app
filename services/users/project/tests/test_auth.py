@@ -2,7 +2,6 @@
 
 
 import json
-from flask import current_app
 import time
 
 from project import db
@@ -133,7 +132,7 @@ class TestAuthBlueprint(BaseTestCase):
                     'email': 'test@test.com',
                     'password': 'test'
                 }),
-                content_type='application/json'
+                content_type='application/json',
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
@@ -150,7 +149,7 @@ class TestAuthBlueprint(BaseTestCase):
                     'email': 'test@test.com',
                     'password': 'test'
                 }),
-                content_type='application/json'
+                content_type='application/json',
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -168,7 +167,7 @@ class TestAuthBlueprint(BaseTestCase):
                     'email': 'test@test.com',
                     'password': 'test'
                 }),
-                content_type='application/json'
+                content_type='application/json',
             )
             # valid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
@@ -178,12 +177,12 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully logged out.')
+            self.assertTrue(
+                data['message'] == 'Successfully logged out.')
             self.assertEqual(response.status_code, 200)
 
     def test_invalid_logout_expired_token(self):
         add_user('test', 'test@test.com', 'test')
-        current_app.config['TOKEN_EXPIRATION_SECONDS'] = -1
         with self.client:
             resp_login = self.client.post(
                 '/auth/login',
@@ -194,6 +193,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             # invalid token logout
+            time.sleep(4)
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
                 '/auth/logout',
@@ -202,7 +202,7 @@ class TestAuthBlueprint(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(
-            data['message'] == 'Signature expired. Please log in again.')
+                data['message'] == 'Signature expired. Please log in again.')
             self.assertEqual(response.status_code, 401)
 
     def test_invalid_logout(self):
