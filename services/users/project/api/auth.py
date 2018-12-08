@@ -1,13 +1,16 @@
 # services/users/project/api/auth.py
 
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc, or_
 
 from project.api.models import User
 from project import db, bcrypt
+from project.api.utils import authenticate
 
 
 auth_blueprint = Blueprint('auth', __name__)
+
 
 @auth_blueprint.route('/auth/register', methods=['POST'])
 def register_user():
@@ -45,7 +48,7 @@ def register_user():
             response_object['message'] = 'Sorry. That user already exists.'
             return jsonify(response_object), 400
     # handler errors
-    except (exc.IntegrityError, ValueError) as e:
+    except (exc.IntegrityErro, ValueError) as e:
         db.session.rollback()
         return jsonify(response_object), 400
 
@@ -63,7 +66,7 @@ def login_user():
     password = post_data.get('password')
     try:
         # fetch the user data
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email). first()
         if user and bcrypt.check_password_hash(user.password, password):
             auth_token = user.encode_auth_token(user.id)
             if auth_token:
@@ -79,44 +82,21 @@ def login_user():
         return jsonify(response_object), 500
 
 @auth_blueprint.route('/auth/logout', methods=['GET'])
-def logout_user():
-    # get auth token
-    auth_header = request.headers.get('Authorization')
+@authenticate
+def logout_user(resp):
     response_object = {
-        'status': 'fail',
-        'message': 'Provide a valid auth token.'
+        'status': 'success',
+        'message': 'Successfully logged out.'
     }
-    if auth_header:
-        auth_token = auth_header.split(' ')[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            response_object['status'] = 'success'
-            response_object['message'] = 'Successfully logged out.'
-            return jsonify(response_object), 200
-        else:
-            response_object['message'] = resp
-            return jsonify(response_object), 401
-    else:
-        return jsonify(response_object), 403
+    return jsonify(response_object), 200
 
 @auth_blueprint.route('/auth/status', methods=['GET'])
-def get_user_status():
-    # get auth token
-    auth_header = request.headers.get('Authorization')
+@authenticate
+def get_user_status(resp):
+    user = User.query.filter_by(id=resp).first()
     response_object = {
-        'status': 'fail',
-        'message': 'Provide a valid auth token.'
+        'status': 'success',
+        'message': 'success',
+        'data': user.to_json()
     }
-    if auth_header:
-        auth_token = auth_header.split(' ')[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            user = User.query.filter_by(id=resp).first()
-            response_object['status'] = 'success'
-            response_object['message'] = 'Success.'
-            response_object['data'] = user.to_json()
-            return jsonify(response_object), 200
-        response_object['message'] = resp
-        return jsonify(response_object), 401
-    else:
-        return jsonify(response_object), 401
+    return jsonify(response_object), 200
