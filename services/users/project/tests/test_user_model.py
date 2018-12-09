@@ -70,6 +70,5 @@ class TestUserModel(BaseTestCase):
         self.assertEqual(User.decode_auth_token(auth_token), user.id)
 
 
-
 if __name__ == '__main__':
     unittest.main()

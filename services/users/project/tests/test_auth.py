@@ -113,23 +113,6 @@ class TestAuthBlueprint(BaseTestCase):
                 'Sorry. That user already exists.', data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_user_registration_invalid_json_no_email(self):
-        add_user('test', 'test@test.com', 'test')
-        with self.client:
-            response = self.client.post(
-                '/auth/register',
-                data=json.dumps({
-                    'username': 'justatest',
-                    'email': 'test@test.com'
-                }),
-                content_type='application/json',
-            )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn(
-                'Sorry. That user already exists.', data['message'])
-            self.assertIn('fail', data['status'])
-
     def test_registered_user_login(self):
         with self.client:
             add_user('test', 'test@test.com', 'test')
@@ -176,7 +159,7 @@ class TestAuthBlueprint(BaseTestCase):
                 }),
                 content_type='application/json',
             )
-            #valid token logout
+            # valid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
                 '/auth/logout',
@@ -200,7 +183,7 @@ class TestAuthBlueprint(BaseTestCase):
                 }),
                 content_type='application/json',
             )
-            #invalid token logout
+            # invalid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
                 '/auth/logout',
@@ -236,7 +219,7 @@ class TestAuthBlueprint(BaseTestCase):
                 }),
                 content_type='application/json',
             )
-            #invalid token logout
+            # invalid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
                 '/auth/status',

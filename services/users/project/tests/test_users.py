@@ -227,11 +227,11 @@ class TestUserService(BaseTestCase):
             self.assertIn(
                 'michael@mherman.org', data['data']['users'][0]['email'])
             self.assertTrue(data['data']['users'][0]['active'])
-            #self.assertTrue(data['data']['users'][0]['admin'])
+            # self.assertTrue(data['data']['users'][0]['admin'])
             self.assertIn(
                 'fletcher@notreal.com', data['data']['users'][1]['email'])
             self.assertTrue(data['data']['users'][1]['active'])
-            #self.assertTrue(data['data']['users'][1]['admin'])
+            # self.assertTrue(data['data']['users'][1]['admin'])
             self.assertIn('success', data['status'])
 
     def test_main_no_users(self):
@@ -260,7 +260,10 @@ class TestUserService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 '/',
-                data=dict(username='michael', email='michael@sonotreal.com', password='greaterthaneight'),
+                data=dict(
+                    username='michael',
+                    email='michael@sonotreal.com',
+                    password='greaterthaneight'),
                 follow_redirects=True
             )
             self.assertEqual(response.status_code, 200)
@@ -298,7 +301,6 @@ class TestUserService(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Provide a valid auth token.')
             self.assertEqual(response.status_code, 401)
-
 
     def test_add_user_not_admin(self):
         add_user('test', 'test@test.com', 'test')
