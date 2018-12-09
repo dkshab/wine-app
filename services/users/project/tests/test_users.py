@@ -227,11 +227,11 @@ class TestUserService(BaseTestCase):
             self.assertIn(
                 'michael@mherman.org', data['data']['users'][0]['email'])
             self.assertTrue(data['data']['users'][0]['active'])
-            self.assertTrue(data['data']['users'][0]['admin'])
+            #self.assertTrue(data['data']['users'][0]['admin'])
             self.assertIn(
                 'fletcher@notreal.com', data['data']['users'][1]['email'])
             self.assertTrue(data['data']['users'][1]['active'])
-            self.assertTrue(data['data']['users'][1]['admin'])
+            #self.assertTrue(data['data']['users'][1]['admin'])
             self.assertIn('success', data['status'])
 
     def test_main_no_users(self):
