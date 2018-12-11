@@ -48,7 +48,7 @@ def register_user():
             response_object['message'] = 'Sorry. That user already exists.'
             return jsonify(response_object), 400
     # handler errors
-    except (exc.IntegrityErro, ValueError) as e:
+    except (exc.IntegrityError, ValueError) as e:
         db.session.rollback()
         return jsonify(response_object), 400
 
@@ -67,7 +67,7 @@ def login_user():
     password = post_data.get('password')
     try:
         # fetch the user data
-        user = User.query.filter_by(email=email). first()
+        user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
             auth_token = user.encode_auth_token(user.id)
             if auth_token:

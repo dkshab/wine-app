@@ -18,7 +18,7 @@ describe('Register', () => {
             .get('input[name="username"]').type(username)
             .get('input[name="email"]').type(email)
             .get('input[name="password"]').type('test')
-            .get('input[name="submit"]').click()
+            .get('input[type="submit"]').click()
 
             // assert user is directed to '/'
             // assert '/' is displayed properly

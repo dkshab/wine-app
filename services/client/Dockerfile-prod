@@ -20,18 +20,19 @@ ENV REACT_APP_USERS_SERVICE_URL $REACT_APP_USERS_SERVICE_URL
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
-# create builder
+# create build
 COPY . /usr/src/app
 RUN npm run build
 
 
-##############
-#### FINAL ###
-##############
+#########
+# FINAL #
+#########
 
 # base image
 FROM nginx:1.15.0-alpine
 
+# new
 # update nginx conf
 RUN rm -rf /etc/nginx/conf.d
 COPY conf /etc/nginx

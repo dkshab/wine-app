@@ -10,7 +10,7 @@ exports[`Logout renders a snapshot properly 1`] = `
     >
       here
     </a>
-    to log back in.
+     to log back in.
   </p>
 </div>
 `;

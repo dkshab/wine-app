@@ -1,11 +1,13 @@
 # services/users/project/api/users.py
 
-from flask import Blueprint, jsonify, request, render_template
+
 from sqlalchemy import exc
+from flask import Blueprint, jsonify, request, render_template
 
 from project.api.models import User
 from project import db
 from project.api.utils import authenticate, is_admin
+
 
 users_blueprint = Blueprint('users', __name__, template_folder='./templates')
 
@@ -23,6 +25,14 @@ def index():
     return render_template('index.html', users=users)
 
 
+@users_blueprint.route('/users/ping', methods=['GET'])
+def ping_pong():
+    return jsonify({
+        'status': 'success',
+        'message': 'pong!'
+    })
+
+
 @users_blueprint.route('/users', methods=['POST'])
 @authenticate
 def add_user(resp):
@@ -31,6 +41,7 @@ def add_user(resp):
         'status': 'fail',
         'message': 'Invalid payload.'
     }
+    # new
     if not is_admin(resp):
         response_object['message'] = 'You do not have permission to do that.'
         return jsonify(response_object), 401
@@ -92,11 +103,3 @@ def get_all_users():
         }
     }
     return jsonify(response_object), 200
-
-
-@users_blueprint.route('/users/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })

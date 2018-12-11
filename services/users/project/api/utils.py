@@ -7,8 +7,6 @@ from flask import request, jsonify
 
 from project.api.models import User
 
-from project import db
-
 
 def authenticate(f):
     @wraps(f)
@@ -35,13 +33,3 @@ def authenticate(f):
 def is_admin(user_id):
     user = User.query.filter_by(id=user_id).first()
     return user.admin
-
-
-def add_admin(username, email, password):
-    user = User(
-        username=username, email=email,
-        password=password, admin=True
-    )
-    db.session.add(user)
-    db.session.commit()
-    return user
