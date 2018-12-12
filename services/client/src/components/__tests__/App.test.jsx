@@ -4,10 +4,11 @@ import { MemoryRouter as Router } from 'react-router-dom';
 
 import App from '../../App';
 
+
 beforeAll(() => {
   global.localStorage = {
     getItem: () => 'someToken'
-  };
+   };
 });
 
 test('App renders without crashing', () => {
@@ -19,4 +20,4 @@ test('App will call componentWillMount when mounted', () => {
   App.prototype.componentWillMount = onWillMount;
   const wrapper = mount(<Router><App/></Router>);
   expect(onWillMount).toHaveBeenCalledTimes(1)
-})
+});
